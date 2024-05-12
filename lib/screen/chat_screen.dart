@@ -25,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getAvatarImage();
+    setUpPushNotification();
   }
 
   Future<void> getAvatarImage() async {
