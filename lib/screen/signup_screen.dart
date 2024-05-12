@@ -23,16 +23,16 @@ class _SignupScreenState extends State<SignupScreen> {
   String _name = "";
   String _pass = "";
   String _email = "";
-  String _emailError = ""; 
-  String _passwordError = ""; 
+  String _emailError = "";
+  String _passwordError = "";
   IconData icon = Icons.visibility;
   bool isVisible = false;
-  bool _isSubmitting = false; 
+  bool _isSubmitting = false;
   File? _selectedImage;
 
   final _formKey = GlobalKey<FormState>();
 
-   void _submit() async {
+  void _submit() async {
     setState(() {
       _isSubmitting = true;
     });
@@ -49,9 +49,10 @@ class _SignupScreenState extends State<SignupScreen> {
           email: _email, password: _pass);
 
       if (_selectedImage != null) {
-        final storageRef = FirebaseStorage.instance.ref().child('user_image').child(
-          '${userCredential.user!.uid}.jpg',
-        );
+        final storageRef =
+            FirebaseStorage.instance.ref().child('user_image').child(
+                  '${userCredential.user!.uid}.jpg',
+                );
         await storageRef.putFile(_selectedImage!);
         final imageUrl = await storageRef.getDownloadURL();
         await FirebaseFirestore.instance
@@ -61,11 +62,13 @@ class _SignupScreenState extends State<SignupScreen> {
           "image": imageUrl,
           "name": _name,
           "email": _email,
+          "about_me": "Hey I'm using chatty",
         });
       }
 
       if (userCredential != null) {
-        Navigator.of(context).pushReplacement(
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
           MaterialPageRoute(
             builder: (ctx) => const ChatScreen(),
           ),
@@ -75,10 +78,10 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         _isSubmitting = false;
       });
-      if(error.code == 'email-already-in-use'){
+      if (error.code == 'email-already-in-use') {
         _emailError = "email-already-in-use";
       }
-      if(error.code == "weak-password"){
+      if (error.code == "weak-password") {
         _passwordError = "weak-password";
       }
     } catch (error) {
@@ -87,7 +90,6 @@ class _SignupScreenState extends State<SignupScreen> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +176,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     height: 16,
                   ),
                   TextFormField(
-                    obscureText:   isVisible ,
+                    obscureText: isVisible,
                     decoration: InputDecoration(
                       errorText: _passwordError.isEmpty ? null : _passwordError,
                       label: const Text("Password"),
